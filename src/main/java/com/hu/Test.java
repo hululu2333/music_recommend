@@ -25,6 +25,10 @@ public class Test {
         driver.close();
     }
 
+    /**
+     * 根据音乐类型url获得歌单url
+     * @throws InterruptedException
+     */
     @org.junit.Test
     public void test2() throws InterruptedException {
         System.setProperty("webdriver.chrome.driver", "D:\\develop\\chromedriver.exe");
@@ -52,7 +56,7 @@ public class Test {
         System.out.println(as.size());
         for(WebElement we : as){
             System.out.println(count++);
-            System.out.println(we.getText());
+            //System.out.println(we.getText());
             String a = we.getAttribute("href");
             System.out.println(a);
         }
