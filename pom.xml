@@ -4,11 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>groupId</groupId>
+    <groupId>org.example</groupId>
     <artifactId>music_recommend</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <dependencies>
+        <!-- http客户端 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+        </dependency>
+
         <!-- selenium-java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -22,11 +28,14 @@
             <version>1.2.17</version>
         </dependency>
 
-        <!-- java csv -->
+        <!-- 自己手动导入的一个依赖，用于java对csv的操作 -->
         <dependency>
             <groupId>javacsv</groupId>
             <artifactId>javacsv</artifactId>
             <version>2.0</version>
         </dependency>
+
     </dependencies>
+
+
 </project>

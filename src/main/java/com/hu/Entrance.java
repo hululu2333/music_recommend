@@ -13,10 +13,10 @@ public class Entrance {
     private static Logger log = Logger.getLogger(Entrance.class.getClass());
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Sprider.getUrlsToCsv("D:/songInfos.csv");
-        log.info("包含音乐信息的csv已生成");
+//        Sprider.getUrlsToCsv("D:/songInfos.csv");
+//        log.info("包含音乐信息的csv已生成");
 
-        Sprider.downMusicFromCsv("D:/songInfos.csv");
+        Sprider.downMusicFromCsvToFs("D:/songInfos.csv","D:/music/");
 
     }
 }
