@@ -5,14 +5,16 @@ import com.csvreader.CsvWriter;
 import com.hu.bean.MusicInfo;
 import com.hu.bean.MusicTypeInfo;
 import com.hu.bean.PlayListInfo;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -68,6 +70,7 @@ public class Sprider {
     /**
      * 读取csv文件中的音乐信息
      * 根据这些信息将音乐下载下来
+     * 用四个线程来下载
      * @param filePath csv文件存放的路径
      * @param targetDir 下载的图片存放的路径，路径要以/结尾
      */
@@ -96,14 +99,18 @@ public class Sprider {
                 musicInfos.add(musicInfo);
             }
 
-            musicInfos.forEach(musicInfo -> {
-                new Thread(new MultipleDownload(musicInfo,targetDir)).run();
-                try {
-                    Thread.sleep(500); //每过0.5秒开启一个线程
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
+            //将csv分为四段，启用四个线程下载
+            int size = musicInfos.size();
+            int mark1 = size/4; //437
+            int mark2 = size-mark1-mark1;
+            int mark3 = size-mark1;
+
+            new Thread(new MultipleDownload(musicInfos.subList(0,mark1),targetDir,"线程1")).start();
+            new Thread(new MultipleDownload(musicInfos.subList(mark1,mark2),targetDir,"线程2")).start();
+            new Thread(new MultipleDownload(musicInfos.subList(mark2,mark3),targetDir,"线程3")).start();
+            new Thread(new MultipleDownload(musicInfos.subList(mark3,size-1),targetDir,"线程4")).start();
+
+            System.out.println("所有进程都启动了");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,43 +124,47 @@ public class Sprider {
      * 输入的targetDir必须为这种类型，以/结尾  D:/music/
      */
     static class MultipleDownload implements Runnable{
-        private MusicInfo musicInfo;
+        private List<MusicInfo> musicInfos; //四分之一音乐信息
         private String targetDir; //音乐的储存路径
+        private String threadName; //当前的线程名
+        private CloseableHttpClient httpClient= HttpClients.createDefault(); //客户端实例
 
-        public MultipleDownload(MusicInfo musicInfo, String targetDir){
-            this.musicInfo=musicInfo;
+        public MultipleDownload(List<MusicInfo> musicInfos, String targetDir,String threadName){
+            this.musicInfos=musicInfos;
             this.targetDir=targetDir;
+            this.threadName=threadName;
         }
 
 
         @Override
         public void run() {
-            String href = "http://music.163.com/song/media/outer/url?id="+musicInfo.getMusicId()+".mp3";
+            musicInfos.forEach(musicInfo -> {
+                String href = "http://music.163.com/song/media/outer/url?id="+musicInfo.getMusicId()+".mp3";
 
-            URL url = null;
-            URLConnection connection = null;
-            InputStream fis=null;
-            OutputStream fos=null;
-            try {
-                url = new URL(href);
-                connection = url.openConnection();
-                fis = connection.getInputStream();
-                fos = new FileOutputStream(targetDir+musicInfo.getMusicName()+".m4a");
+                HttpGet httpget = new HttpGet(href);
 
-                byte[] temp = new byte[1024 * 10];
-                int length1 = -1;
+                //为get请求配置cookie设置策略，并设置agent
+                RequestConfig defaultConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+                httpget.setConfig(defaultConfig);
+                httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0");
+                CloseableHttpResponse response = null; //HttpResponse
+                try {
+                    response = httpClient.execute(httpget);
 
-                //开始下载
-                while ((length1 = fis.read(temp)) != -1) {
-                    fos.write(temp,0,length1);
+                    HttpEntity httpEntity= response.getEntity(); //可以看作是目标网页的抽象
+
+                    if(httpEntity.getContentLength()==-1){
+                        System.out.println(threadName+"->  "+musicInfo.getMusicName()+"：找不到");
+                    }else {
+                        httpEntity.writeTo(new FileOutputStream(targetDir+musicInfo.getMusicName()+".m4a"));
+                        System.out.println(threadName+"->  "+musicInfo.getMusicName()+"：下载完成"+"    文件大小："+httpEntity.getContentLength()+"Byte");
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                fos.flush();
+            });
 
-                System.out.println(musicInfo.getMusicName()+"：下载完成");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

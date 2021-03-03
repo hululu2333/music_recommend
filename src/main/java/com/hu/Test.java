@@ -5,12 +5,23 @@ import com.hu.bean.MusicInfo;
 import com.hu.bean.MusicTypeInfo;
 import com.hu.bean.PlayListInfo;
 import com.hu.sprider.UrlGetter;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,36 +30,23 @@ public class Test {
 
     @org.junit.Test
     public void test() throws InterruptedException, IOException {
-        UrlGetter urlGetter = new UrlGetter();
+        String href = "http://music.163.com/song/media/outer/url?id=1421454397.mp3";
+        //String href ="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617338141&t=11fdbc2d515a7f9db444a3a771a307eb";
 
-        List<MusicTypeInfo> musicTypeInfos = urlGetter.getSongTypeUrl();
-        List<PlayListInfo> playListInfos = urlGetter.getPlayListUrl(musicTypeInfos);
-        List<MusicInfo> musicInfos = urlGetter.getSongUrl(playListInfos);
 
-        String filePath = "D:/test.csv";
+        //创建http客户端并拿到目标网页的源码
+        CloseableHttpClient httpClient= HttpClients.createDefault();
+        HttpGet httpget = new HttpGet(href);
+        httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0");
 
-        try {
-            // 创建CSV写对象
-            CsvWriter csvWriter = new CsvWriter(filePath,',', Charset.forName("GBK"));
-            //CsvWriter csvWriter = new CsvWriter(filePath);
+//        httpget.setHeader();
+        CloseableHttpResponse response = httpClient.execute(httpget); //HttpResponse
+        HttpEntity httpEntity= response.getEntity(); //可以看作是目标网页的抽象
 
-            // 写表头
-            String[] headers = {"音乐标题","音乐id","音乐时长","音乐链接(并不是外链)","歌手","专辑","专辑链接","音乐类型","歌单名"};
-            csvWriter.writeRecord(headers);
-            musicInfos.forEach(musicInfo -> {
-                try {
-                    csvWriter.writeRecord(new String[]{musicInfo.getMusicName(),musicInfo.getMusicId(),musicInfo.getMusicDuration(),
-                    musicInfo.getMusicHref(),musicInfo.getSinger(),musicInfo.getAlbum(),musicInfo.getAlbumHref(),musicInfo.getMusicType(),musicInfo.getPlayListName()});
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        httpEntity.writeTo(new FileOutputStream("D:/text.m4a"));
 
-            csvWriter.close();
+        System.out.println(httpEntity.getContentType());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
