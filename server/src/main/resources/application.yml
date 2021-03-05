@@ -1,0 +1,19 @@
+server:
+  port: 8514
+  tomcat:
+    max-connections: 1000
+    accept-count: 1000
+    threads:
+      max: 1000
+  servlet:
+    context-path: /musicServer
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.0.124:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: ziyunIot
+    password: Pass1234
+
+  mybatis:
+    mapper-locations: classpath:mapper/**/*Mapper.xml

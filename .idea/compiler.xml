@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <option name="USE_RELEASE_OPTION" value="false" />
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="music_recommend" />
+        <module name="web_pages" />
+        <module name="server" />
+        <module name="music_sprider" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="music_recommend" target="1.8" />
+      <module name="server2" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="music_sprider" options="-parameters" />
+      <module name="server" options="-parameters" />
+      <module name="server2" options="-parameters" />
+      <module name="web_pages" options="-parameters" />
+    </option>
   </component>
 </project>
