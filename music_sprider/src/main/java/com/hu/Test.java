@@ -28,24 +28,29 @@ import java.util.List;
 
 public class Test {
 
+
     @org.junit.Test
     public void test() throws InterruptedException, IOException {
-        String href = "http://music.163.com/song/media/outer/url?id=1421454397.mp3";
-        //String href ="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617338141&t=11fdbc2d515a7f9db444a3a771a307eb";
+//        String href = "http://music.163.com/song/media/outer/url?id=1421454397.mp3";
+//        //String href ="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fa0.att.hudong.com%2F30%2F29%2F01300000201438121627296084016.jpg&refer=http%3A%2F%2Fa0.att.hudong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1617338141&t=11fdbc2d515a7f9db444a3a771a307eb";
+//
+//
+//        //创建http客户端并拿到目标网页的源码
+//        CloseableHttpClient httpClient= HttpClients.createDefault();
+//        HttpGet httpget = new HttpGet(href);
+//        httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0");
+//
+////        httpget.setHeader();
+//        CloseableHttpResponse response = httpClient.execute(httpget); //HttpResponse
+//        HttpEntity httpEntity= response.getEntity(); //可以看作是目标网页的抽象
+//
+//        httpEntity.writeTo(new FileOutputStream("D:/text.m4a"));
+//
+//        System.out.println(httpEntity.getContentType());
 
+        String a = "上海市上海城区松江区漕河泾开发区松江高科技园莘砖公路518号5幢705室";
 
-        //创建http客户端并拿到目标网页的源码
-        CloseableHttpClient httpClient= HttpClients.createDefault();
-        HttpGet httpget = new HttpGet(href);
-        httpget.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0");
-
-//        httpget.setHeader();
-        CloseableHttpResponse response = httpClient.execute(httpget); //HttpResponse
-        HttpEntity httpEntity= response.getEntity(); //可以看作是目标网页的抽象
-
-        httpEntity.writeTo(new FileOutputStream("D:/text.m4a"));
-
-        System.out.println(httpEntity.getContentType());
+        System.out.println(a.split("市")[0]);
 
     }
 
