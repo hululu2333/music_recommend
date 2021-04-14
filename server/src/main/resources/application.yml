@@ -9,6 +9,9 @@ server:
     context-path: /musicServer
 
 spring:
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:D://music
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.0.124:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai

@@ -66,12 +66,10 @@ public class MusicHandler {
      * 在java中创建埋点日志
      */
     @RequestMapping("/collectInfo")
-    public ResponseDto<ArrayList<MusicInfo>> collectInfo(){
-
-        ArrayList<MusicInfo> list = new ArrayList<>();
+    public ResponseDto<String> collectInfo(@RequestParam String songId){
 
 
-        return new ResponseDto<>(list);
+        return new ResponseDto<>(songId);
     }
 
 }
