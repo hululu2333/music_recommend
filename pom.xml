@@ -20,6 +20,7 @@
         <module>music_sprider</module>
         <module>web_pages</module>
         <module>server</module>
+        <module>big_data</module>
     </modules>
 
 

@@ -23,13 +23,59 @@
     <li class="layui-nav-item"><a href="">社区</a></li>
 </ul>
 
-<script>
-    //注意：导航 依赖 element 模块，否则无法进行功能性操作
-    layui.use('element', function(){
-        var element = layui.element;
+<div id="music1"> </div>
+<div id="music2"> </div>
+<div id="music3"> </div>
+<div id="music4"> </div>
+<div id="music5"> </div>
 
-        //…
-    });
+
+<script>
+    alert("armwind1")
+    console.log("hello world1")
+
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    // layui.use('element', function(){
+    //     var element = layui.element;
+    //
+    //     //…
+    // });
+
+    window.onload = function(){
+      //存放音乐列表，根据音乐文件路径，进行填写
+      var musicList = ["D:/music/Love Illumination.m4a","D:/music/Love Illumination.m4"]
+      playMusic(musicList);
+    }
+
+    function playMusic(musicList){
+      var myAudio = new Audio();
+      //是否进行预加载
+      myAudio.preload = false;
+      //是否显示隐藏按钮
+      myAudio.controls = true;
+      myAudio.hidden = true;
+      //从音乐列表中，获取最后一个音乐（并删除）
+      var src = musicList.pop();
+      myAudio.src =src;
+      //将最后一个音乐添加到数组的开头，这样实现循环
+      musicList.unshift(src);
+      //绑定音乐结束事件，当音乐播放完成后，将会触发playEndedHandler方法
+      myAudio.addEventListener("ended",playEndedHandler,false);
+      //播放当前音乐
+      myAudio.play();
+      document.getElementById("music1").appendChild(myAudio);
+      //将循环播放关闭，如果开启，将不能触发playEndedHandler方法，只能进行单曲循环
+      myAudio.loop = false;
+
+      function playEndedHandler(){
+        src = musicList.pop();
+        myAudio.src = src;
+        musicList.unshift(src);
+        myAudio.play();
+      }
+    }
+
+    console.log("hello world1");
 </script>
 </body>
 </html>

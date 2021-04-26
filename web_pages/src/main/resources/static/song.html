@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./css/song.css">
+  <title>播放歌曲</title>
+</head>
+<body>
+<div id="app" class="app">
+  <div class="page">
+    <div class="backgroundCover"></div>
+    <div class="mainWrapper">
+      <main>
+        <div class="logo">
+          <img src="./img/songImg/logo.png" alt="">
+        </div>
+        <div class="cdPlay">
+          <img src="./img/songImg/needle.png" alt="">
+          <div class="cd">
+            <div class="disc">
+              <img src="./img/songImg/disc.png" alt="">
+              <div class="disc_light">
+                <img src="./img/songImg/disc_light.png" alt="">
+                <div id="coverWrapperParent" class="coverWrapperParent">
+                  <div id="coverWrapper" class="audioControl coverWrapper">
+                    <img id="play" onclick="start()" class="audioControl active" src="./img/songImg/下载.png" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="song-description">
+          <h1></h1>
+          <div class="lyric">
+            <div class="lines">
+
+            </div>
+          </div>
+        </div>
+        <footer>
+          <span class="open">打 开</span>
+          <span class="download">下 载</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+        window.onload=function(){
+         getPath();
+        }
+
+          function getPath(){
+           var urlParam = window.location.href.split("?")[1];
+           var ids=urlParam.substr(3,urlParam.length);
+           var url="http://localhost:8080"+ids;
+
+            var html3 = "";
+            html3+='<audio id="music" src="'+url +'" controls="controls"></audio>'
+
+            $('#play').html(html3);
+
+         }
+
+
+
+        function start(){
+         var audio = document.getElementById('music');
+           if (audio.paused) {
+               audio.play();
+             document.getElementById('play').src="/img/songImg/disc_light.png";
+        }else{
+              audio.pause();
+              audio.currentTime = 0;//音乐从头播放
+              document.getElementById('play').src="/img/songImg/下载.png";
+       }
+        }
+
+
+    </script>
+
+
+<!-- <script>
+    window.onerror=function(message,file,row){
+        alert(message,file,row)
+    }
+</script> -->
+<!-- <script>(function(){var WebP=new Image();WebP.onload=WebP.onerror=function(){
+    if(WebP.height!=2){var sc=document.createElement('script');sc.type='text/javascript';sc.async=true;
+    var s=document.getElementsByTagName('script')[0];sc.src='js/webpjs-0.0.2.min.js';s.parentNode.insertBefore(sc,s);}};
+    WebP.src='data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';})();</script> -->
+<script src="./vendor/jquery-3.3.1.min.js"></script>
+<script src="./vendor/av-min.js"></script>
+<!-- <script src="../node_modules/leancloud-storage/dist/av-min.js"></script> -->
+<script src="./js/initializers/av.js"></script>
+<script src="./js/admin/eventHub.js"></script>
+<script src="./js/song/app.js"></script>
+</body>
+</html>

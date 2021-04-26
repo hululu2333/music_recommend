@@ -16,10 +16,8 @@ public class Entrance {
 //        Sprider.getUrlsToCsv("D:/songInfos.csv");
 //        log.info("包含音乐信息的csv已生成");
 
-//        Sprider.downMusicFromCsvToFs("D:/songInfos.csv","D:/music/");
+        Sprider.downMusicFromCsvToFs("D:/songs.csv","D:/music/");
 
-        String a = "上海市上海城区松江区漕河泾开发区松江高科技园莘砖公路518号5幢705室";
 
-        System.out.println(a.split("省")[0]);
     }
 }

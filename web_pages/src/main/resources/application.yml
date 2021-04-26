@@ -1,12 +1,12 @@
 server:
-  port: 8080
+  port: 8514
   tomcat:
     max-connections: 1000
     accept-count: 1000
     threads:
       max: 1000
   servlet:
-    context-path: /musicServer
+    context-path: /
 
 spring:
   resources:
