@@ -1,5 +1,7 @@
 package com.hu.server.http;
 
+import com.hu.server.exception.SocketNotConnectedcException;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -28,7 +30,11 @@ public class HttpClientHu {
     }
 
 
-    public void sentLog(String log) throws IOException {
+    public void sentLog(String log) throws IOException, SocketNotConnectedcException {
+        if(!client.isConnected()){
+            throw new SocketNotConnectedcException();
+        }
+
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         bw.write(log);
         bw.flush();

@@ -1,13 +1,16 @@
 package com.hu.server.api;
 
+import com.hu.server.exception.SocketNotConnectedcException;
 import com.hu.server.http.HttpClientHu;
 import com.hu.server.model.dto.ResponseDto;
 import com.hu.server.model.entity.MusicInfo;
+import com.hu.server.util.ServerUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -79,23 +82,31 @@ public class MusicHandler {
 
     /**
      * 调用这个接口
-     * 返回用户可能感兴趣的十一首歌的信息
+     * 返回用户可能感兴趣的部分音乐的信息
      *
      * @return
      */
     @RequestMapping("/recommendMusic")
-    public ResponseDto<ArrayList<MusicInfo>> recommendMusic() {
-
+    public ResponseDto<ArrayList<MusicInfo>> recommendMusic() throws SQLException {
+        Statement stat = conn.createStatement();
         ArrayList<MusicInfo> list = new ArrayList<>();
-        MusicInfo mi = new MusicInfo();
-        mi.setMusicId("1912");
-        mi.setMusicName("recommendmusic");
-        mi.setStorePath("/musicServer/等人.m4a");
-        mi.setSinger("recommend");
 
-        for (int i = 0; i < 11; i++) {
-            list.add(mi);
-        }
+        //拿到推荐依据
+        String sql1="select * from recommend ";
+        ResultSet rs = stat.executeQuery(sql1);
+        rs.next();
+        String singer = rs.getString("singer");
+        String album = rs.getString("album");
+        String musicType = rs.getString("musicType");
+        String playListName = rs.getString("playListName");
+
+        String sql2="select * from music where singer = '"+singer+"' limit 6";
+        String sql3="select * from music where album = '"+album+"' limit 6";
+        String sql4="select * from music where playListName = '"+playListName+"' limit 6";
+
+        list.addAll(ServerUtil.rsToArray(stat.executeQuery(sql2)));
+        list.addAll(ServerUtil.rsToArray(stat.executeQuery(sql3)));
+        list.addAll(ServerUtil.rsToArray(stat.executeQuery(sql4)));
 
         return new ResponseDto<>(list);
 
@@ -124,8 +135,14 @@ public class MusicHandler {
         System.out.println("日志："+log);
 
         //将日志写入linux服务器
-        HttpClientHu httpClient = new HttpClientHu("192.168.220.131",8888);
-        httpClient.sentLog(log);
+        HttpClientHu httpClient;
+        try {
+            httpClient = new HttpClientHu("192.168.220.131",8888);
+            httpClient.sentLog(log);
+        } catch (Exception e) {
+            System.out.println("未连接成功");
+            return new ResponseDto<>(songId);
+        }
         System.out.println("用户日志写入成功");
 
         return new ResponseDto<>(songId);

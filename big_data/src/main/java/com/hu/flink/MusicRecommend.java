@@ -1,8 +1,9 @@
-package com.hu.server;
+package com.hu.flink;
 
 import com.alibaba.fastjson.JSON;
 import com.hu.bean.FlinkState;
 import com.hu.bean.RecommendBasis;
+import com.hu.sink.MysqlSinkFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -24,7 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
 
-public class Test {
+public class MusicRecommend {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -43,7 +44,7 @@ public class Test {
 
         stream.map(new LogToBasisMapFunction()) //将传入的日志映射为RecommendBasis类型
                 .keyBy((KeySelector<RecommendBasis, Integer>) value -> value.userId) //以userId为key进行分区
-                .flatMap(new RecomResultFlatMapFunction()).print();
+                .flatMap(new RecomResultFlatMapFunction()).addSink(new MysqlSinkFunction());
 
 
         env.execute();

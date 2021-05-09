@@ -8,19 +8,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="web_pages" />
+        <module name="big_data" />
         <module name="server" />
         <module name="music_sprider" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="server2" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="big_data" options="-parameters" />
       <module name="music_sprider" options="-parameters" />
       <module name="server" options="-parameters" />
-      <module name="server2" options="-parameters" />
       <module name="web_pages" options="-parameters" />
     </option>
   </component>
