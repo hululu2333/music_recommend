@@ -2,15 +2,14 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="web_pages" />
-        <module name="big_data" />
         <module name="server" />
         <module name="music_sprider" />
+        <module name="web_pages" />
+        <module name="big_data" />
       </profile>
     </annotationProcessing>
   </component>
